@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - '**'
-      - '!master'
+      - '!main'
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
       DB_PASSWORD: password
       DB_NAME: main
       S3_ACTIONS_BUCKET: ${{ secrets.S3_ACTIONS_BUCKET }}
-      CC_TEST_REPORTER_ID: 4d9f61e4296365ba2cc30bfd10b4bdbd839f48f25a8168250927465c323a4016
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
     services:
       postgres:
@@ -46,9 +46,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
+      # Pulling the github-action from S3
       - name: Download Private Actions
         run: aws s3 cp s3://${{env.S3_ACTIONS_BUCKET}}/action.yml ./.github/actions/action.yml
 
+      # Using the action
       - name: Hello World
         uses: ./.github/actions
         with:
@@ -137,25 +139,3 @@ jobs:
 
       - name: Serverless Deployment
         run: npm run deploy:development
-
-  testing-deployment:
-    name: Testing Deployment
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: Development
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-  production-deployment:
-    name: Production Deployment
-    needs: development-deployment
-    runs-on: ubuntu-latest
-    environment:
-      name: Development
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
