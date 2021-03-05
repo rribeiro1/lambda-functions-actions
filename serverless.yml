@@ -1,0 +1,23 @@
+service: lambda-functions-experiments
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: development
+  region: eu-central-1
+
+package:
+  exclude:
+    - node_modules/**
+    - .venv/**
+
+functions:
+  users:
+    handler: handlers/main.handler
+    description: 'Simple handler that access a Postgres database.'
+    memorySize: 128
+    timeout: 15
+
+plugins:
+  - serverless-python-requirements
+  - serverless-pseudo-parameters

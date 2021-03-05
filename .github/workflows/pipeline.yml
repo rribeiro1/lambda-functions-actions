@@ -1,0 +1,161 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!master'
+
+jobs:
+  build:
+    environment:
+      name: build
+    name: Build & Test
+    runs-on: ubuntu-latest
+    env:
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      DB_NAME: main
+      S3_ACTIONS_BUCKET: ${{ secrets.S3_ACTIONS_BUCKET }}
+      CC_TEST_REPORTER_ID: 4d9f61e4296365ba2cc30bfd10b4bdbd839f48f25a8168250927465c323a4016
+
+    services:
+      postgres:
+        image: postgres:12.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: main
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Download Private Actions
+        run: aws s3 cp s3://${{env.S3_ACTIONS_BUCKET}}/action.yml ./.github/actions/action.yml
+
+      - name: Hello World
+        uses: ./.github/actions
+        with:
+          who-to-greet: 'Rafael'
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Install Pipenv
+        run: sudo pip install pipenv
+
+      - id: pipenv-cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pipenv-
+
+      - name: Install Python Dependencies
+        if: steps.pipenv-cache.outputs.cache-hit != 'true'
+        run: pipenv install --dev
+
+      - name: Install Code Climate Reporter
+        run: npm run code-climate:install
+
+      - name: Check Linter
+        run: npm run linter
+
+      - name: Database Setup
+        run: psql -h localhost -p 5432 main < .github/db_structure.sql -U postgres
+        env:
+          PGPASSWORD: password
+
+      - name: Run Unit Tests
+        run: npm run test:coverage-report
+
+      - name: Uploading Coverage Tests
+        run: npm run code-climate:upload
+
+
+  development-deployment:
+    name: Development Deployment
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Install Pipenv
+        run: sudo pip install pipenv
+
+      - name: Install Serverless Dependencies
+        run: npm install
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 900
+          role-session-name: ServerlessDeploymentSession
+          role-skip-session-tagging: true
+
+      - name: Serverless Deployment
+        run: npm run deploy:development
+
+  testing-deployment:
+    name: Testing Deployment
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+  production-deployment:
+    name: Production Deployment
+    needs: development-deployment
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
