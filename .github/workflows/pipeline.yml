@@ -45,10 +45,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 900
+          role-session-name: GetCustomActionsFromS3
+          role-skip-session-tagging: true
 
       # Pulling the github-action from S3
       - name: Download Private Actions
-        run: aws s3 cp s3://${{env.S3_ACTIONS_BUCKET}}/action.yml ./.github/actions/action.yml
+        run: aws s3 cp s3://${{env.S3_ACTIONS_BUCKET}}/action.yaml ./.github/actions/action.yaml
 
       # Using the action
       - name: Hello World
