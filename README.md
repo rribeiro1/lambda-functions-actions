@@ -4,6 +4,7 @@
 [![Build](https://github.com/rribeiro1/lambda-functions-actions/actions/workflows/pipeline.yml/badge.svg)](https://github.com/rribeiro1/lambda-functions-actions/actions/workflows/pipeline.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c1c06d7c884bf48be751/maintainability)](https://codeclimate.com/github/rribeiro1/lambda-functions-actions/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c1c06d7c884bf48be751/test_coverage)](https://codeclimate.com/github/rribeiro1/lambda-functions-actions/test_coverage)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 
 ### 1. Requirements
 
