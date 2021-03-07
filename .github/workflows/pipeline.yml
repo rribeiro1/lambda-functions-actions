@@ -29,8 +29,8 @@ jobs:
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
+          --health-interval 5s
+          --health-timeout 2s
           --health-retries 5
         ports:
           - 5432:5432
@@ -45,7 +45,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ACTIONS_S3 }}
           role-duration-seconds: 900
           role-session-name: GetCustomActionsFromS3
           role-skip-session-tagging: true
@@ -136,7 +136,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_LAMBDA_DEPLOYMENT }}
           role-duration-seconds: 900
           role-session-name: ServerlessDeploymentSession
           role-skip-session-tagging: true
