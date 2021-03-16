@@ -5,8 +5,6 @@
     "linter": "pipenv run flake8 --statistics",
     "test:unit": "pipenv run python3 -m pytest -v tests/unit --cov . --cov-report term-missing",
     "test:coverage-report": "pipenv run python3 -m pytest -v tests/unit --cov-report xml --cov=. && pipenv run python3 -m coverage report",
-    "code-climate:install": "curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter",
-    "code-climate:upload": "./cc-test-reporter format-coverage -t coverage.py -o codeclimate.xml coverage.xml && ./cc-test-reporter upload-coverage -i codeclimate.xml",
     "deploy:development": "serverless -s development deploy"
   },
   "devDependencies": {
