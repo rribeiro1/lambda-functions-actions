@@ -3,7 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - 'main'
+      - '**'
+      - '!main'
 
 jobs:
   build:
@@ -16,7 +17,6 @@ jobs:
       DB_PASSWORD: password
       DB_NAME: main
       S3_ACTIONS_BUCKET: ${{ secrets.S3_ACTIONS_BUCKET }}
-      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
     services:
       postgres:
@@ -84,9 +84,6 @@ jobs:
         if: steps.pipenv-cache.outputs.cache-hit != 'true'
         run: pipenv install --dev
 
-      - name: Install Code Climate Reporter
-        run: npm run code-climate:install
-
       - name: Check Linter
         run: npm run linter
 
@@ -95,12 +92,14 @@ jobs:
         env:
           PGPASSWORD: password
 
-      - name: Run Unit Tests
-        run: npm run test:coverage-report
-
-      - name: Uploading Coverage Tests
-        run: npm run code-climate:upload
-
+      - name: Test & Publish Code Coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: npm run test:coverage-report
+          coverageLocations: ${{github.workspace}}/coverage.xml:xml
+          debug: true
 
   development-deployment:
     name: Development Deployment
