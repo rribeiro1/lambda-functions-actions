@@ -98,7 +98,7 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageCommand: npm run test:coverage-report
-          coverageLocations: ${{github.workspace}}/coverage.xml:xml
+          coverageLocations: ${{github.workspace}}/coverage.xml:coverage.py
           debug: true
 
   development-deployment:
