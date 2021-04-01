@@ -11,7 +11,7 @@
     "serverless": "2.31.0",
     "serverless-plugin-log-subscription": "1.4.0",
     "serverless-pseudo-parameters": "2.5.0",
-    "serverless-python-requirements": "5.1.0"
+    "serverless-python-requirements": "5.1.1"
   },
   "version": "0.1.0",
   "licence": "private"
