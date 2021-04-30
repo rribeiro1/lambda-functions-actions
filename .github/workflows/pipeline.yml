@@ -226,4 +226,4 @@ jobs:
           role-skip-session-tagging: true
 
       - name: Serverless Deployment
-        run: npm run deploy:development --package .serverless/lambda-functions-experiments.zip
+        run: npm run deploy:development
