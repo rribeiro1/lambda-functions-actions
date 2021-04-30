@@ -109,6 +109,9 @@ jobs:
         with:
           python-version: 3.7
 
+      - name: Install Pipenv
+        run: sudo pip install pipenv
+
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
