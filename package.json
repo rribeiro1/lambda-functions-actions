@@ -8,7 +8,7 @@
     "deploy:development": "serverless deploy --stage development",
     "package": "serverless package"
   },
-  "devDependencies": {
+  "dependencies": {
     "serverless": "2.39.0",
     "serverless-plugin-log-subscription": "1.4.0",
     "serverless-pseudo-parameters": "2.5.0",
