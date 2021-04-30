@@ -7,9 +7,11 @@ provider:
   region: eu-central-1
 
 package:
-  exclude:
-    - node_modules/**
-    - .venv/**
+  patterns:
+    - "!node_modules/**"
+    - "!.venv/**"
+    - "!pytest_cache/**"
+    - "!tests"
 
 functions:
   users:

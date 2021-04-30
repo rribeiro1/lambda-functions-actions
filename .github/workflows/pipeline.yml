@@ -131,7 +131,7 @@ jobs:
 
       - name: Install Serverless Dependencies
         run: yarn install
-        if: ${{ steps.yarn-cache.outputs.cache-hit != 'true' }}
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
 
       - name: Packing functions
         run: yarn run package
@@ -140,7 +140,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: build/lambda-functions-experiments.zip
+          path: .serverless/lambda-functions-experiments.zip
           if-no-files-found: error
 
   development-deployment:
@@ -185,4 +185,4 @@ jobs:
           role-skip-session-tagging: true
 
       - name: Serverless Deployment
-        run: npm run deploy:development --package /build
+        run: npm run deploy:development --package .serverless/lambda-functions-experiments.zip
