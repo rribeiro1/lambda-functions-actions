@@ -58,11 +58,6 @@ jobs:
         with:
           who-to-greet: 'Rafael'
 
-      - name: Set up Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 12
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -84,7 +79,7 @@ jobs:
         run: pipenv install --dev
 
       - name: Check Linter
-        run: npm run linter
+        run: yarn run linter
 
       - name: Database Setup
         run: psql -h localhost -p 5432 main < .github/db_structure.sql -U postgres
@@ -96,16 +91,14 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: npm run test:coverage-report
+          coverageCommand: yarn run test:coverage-report
           coverageLocations: ${{github.workspace}}/coverage.xml:coverage.py
           debug: true
 
-  development-deployment:
-    name: Development Deployment
+  packing:
+    name: Packing Functions
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: Development
 
     steps:
       - name: Checkout Code
@@ -116,16 +109,61 @@ jobs:
         with:
           node-version: 12
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Install Pipenv
-        run: sudo pip install pipenv
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-cache-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-cache-
 
       - name: Install Serverless Dependencies
-        run: npm install
+        run: yarn install
+        if: ${{ steps.yarn-cache.outputs.cache-hit != 'true' }}
+
+      - name: Packing functions
+        run: yarn run package
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build/lambda-functions-experiments.zip
+          if-no-files-found: error
+
+  development-deployment:
+    name: Development Deployment
+    needs: packing
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-cache-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-cache-
+
+      - name: Install Serverless Dependencies
+        run: yarn install
+        if: ${{ steps.yarn-cache.outputs.cache-hit != 'true' }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -139,4 +177,4 @@ jobs:
           role-skip-session-tagging: true
 
       - name: Serverless Deployment
-        run: npm run deploy:development
+        run: npm run deploy:development --package /build

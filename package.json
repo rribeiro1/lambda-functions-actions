@@ -5,10 +5,11 @@
     "linter": "pipenv run flake8 --statistics",
     "test:unit": "pipenv run python3 -m pytest -v tests/unit --cov . --cov-report term-missing",
     "test:coverage-report": "pipenv run python3 -m pytest -v tests/unit --cov-report xml --cov=. && pipenv run python3 -m coverage report",
-    "deploy:development": "serverless -s development deploy"
+    "deploy:development": "serverless deploy --stage development",
+    "package": "serverless package --package /build"
   },
   "devDependencies": {
-    "serverless": "2.29.0",
+    "serverless": "2.39.0",
     "serverless-plugin-log-subscription": "1.4.0",
     "serverless-pseudo-parameters": "2.5.0",
     "serverless-python-requirements": "5.1.0"
