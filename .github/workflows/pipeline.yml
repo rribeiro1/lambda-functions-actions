@@ -227,5 +227,7 @@ jobs:
           role-session-name: ServerlessDeploymentSession
           role-skip-session-tagging: true
 
+      - run: ls -ltra
+
       - name: Serverless Deployment
         run: npm run deploy:development
