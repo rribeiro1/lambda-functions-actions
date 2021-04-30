@@ -157,7 +157,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: .serverless/lambda-functions-experiments.zip
+          path: |
+            .serverless/lambda-functions-experiments.zip
+            .serverless/serverless-state.json
           if-no-files-found: error
 
   development-deployment:
