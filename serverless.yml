@@ -5,6 +5,7 @@ provider:
   runtime: python3.7
   stage: development
   region: eu-central-1
+  lambdaHashingVersion: 20201221
 
 package:
   patterns:
