@@ -5,7 +5,6 @@
     "linter": "pipenv run flake8 --statistics",
     "test:unit": "pipenv run python3 -m pytest -v tests/unit --cov . --cov-report term-missing",
     "test:coverage-report": "pipenv run python3 -m pytest -v tests/unit --cov-report xml --cov=. && pipenv run python3 -m coverage report",
-    "deploy:development": "serverless deploy --stage development --package /",
     "package": "serverless package"
   },
   "devDependencies": {
