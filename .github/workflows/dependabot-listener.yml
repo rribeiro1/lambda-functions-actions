@@ -1,5 +1,5 @@
-### This workflow doesn't have access to secrets and has a read-only token
-name: Dependabot PR Check
+# This workflow doesn't have access to secrets and has a read-only token
+name: Dependabot Listener
 on:
   pull_request
 

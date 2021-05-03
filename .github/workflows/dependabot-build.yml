@@ -2,7 +2,7 @@
 name: Dependabot Build & Test
 on:
   workflow_run:
-    workflows: ["Dependabot PR Check"]
+    workflows: ["Dependabot Listener"]
     types:
       - completed
 
