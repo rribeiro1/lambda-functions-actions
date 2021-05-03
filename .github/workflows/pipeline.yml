@@ -3,14 +3,14 @@ name: CI/CD Pipeline
 on:
   workflow_run:
     workflows: ["Build"]
-    types:
-      - completed
+    types: [completed]
 
 jobs:
   development-deployment:
     name: Development Deployment
     needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: Development
 
