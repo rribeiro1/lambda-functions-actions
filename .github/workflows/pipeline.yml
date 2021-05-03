@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '**'
+  pull_request_target
 
 jobs:
   build:
@@ -11,6 +12,8 @@ jobs:
       name: build
     name: Build & Test
     runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+
     env:
       DB_USERNAME: postgres
       DB_PASSWORD: password
