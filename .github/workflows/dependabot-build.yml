@@ -1,9 +1,10 @@
-name: Build
-
+### This workflow has access to secrets and a read-write token
+name: Dependabot Build & Test
 on:
-  push:
-    branches:
-      - '**'
+  workflow_run:
+    workflows: ["Dependabot PR Check"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -74,7 +75,6 @@ jobs:
           key: ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pipenv-
-
       - name: Install Python Dependencies
         if: steps.pipenv-cache.outputs.cache-hit != 'true'
         run: pipenv install --dev
