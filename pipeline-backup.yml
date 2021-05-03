@@ -75,7 +75,6 @@ jobs:
           key: ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pipenv-
-
       - name: Install Python Dependencies
         if: steps.pipenv-cache.outputs.cache-hit != 'true'
         run: pipenv install --dev
@@ -143,7 +142,6 @@ jobs:
             ${{ runner.os }}-yarn-${{ env.cache-version }}-
             ${{ runner.os }}-yarn-
             ${{ runner.os }}-
-
       - name: Install Dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
@@ -210,7 +208,6 @@ jobs:
             ${{ runner.os }}-yarn-${{ env.cache-version }}-
             ${{ runner.os }}-yarn-
             ${{ runner.os }}-
-
       - name: Install Dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
