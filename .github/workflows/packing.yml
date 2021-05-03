@@ -8,8 +8,8 @@ on:
 jobs:
   packing:
     name: Packing Functions
-    needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout Code

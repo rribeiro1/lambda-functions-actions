@@ -8,8 +8,8 @@ on:
 jobs:
   development-deployment:
     name: Deploy to Development
-    needs: packing
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: Development
 
