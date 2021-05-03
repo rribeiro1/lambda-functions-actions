@@ -4,6 +4,8 @@
 [![Build](https://github.com/rribeiro1/lambda-functions-actions/actions/workflows/pipeline.yml/badge.svg)](https://github.com/rribeiro1/lambda-functions-actions/actions/workflows/pipeline.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c1c06d7c884bf48be751/maintainability)](https://codeclimate.com/github/rribeiro1/lambda-functions-actions/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c1c06d7c884bf48be751/test_coverage)](https://codeclimate.com/github/rribeiro1/lambda-functions-actions/test_coverage)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
+<a href="https://github.com/rribeiro1/lambda-functions-actions/commits/main"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/rribeiro1/lambda-functions-actions?color=ffc30b"></a>
 
 ### 1. Requirements
 
@@ -32,4 +34,13 @@ npm install
 
 ```bash
 npm run test:unit
+```
+
+### 4. Deployment
+
+Example with [awsudo](https://pypi.org/project/awsudo/).
+
+```bash
+# Deployment
+awsudo -u <profile> npm run deploy:development
 ```
