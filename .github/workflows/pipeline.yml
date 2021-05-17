@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - '**'
+  workflow_run:
+    workflows: ["Dependabot Listener"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -11,7 +15,7 @@ jobs:
       name: build
     name: Build & Test
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.actor != 'dependabot[bot]' }}
 
     env:
       DB_USERNAME: postgres
