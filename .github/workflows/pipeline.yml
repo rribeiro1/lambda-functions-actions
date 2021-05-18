@@ -231,7 +231,7 @@ jobs:
 
   deployment-notification:
     name: Deployment Notification
-    needs: [build]
+    needs: ['build', 'packing', 'deployment-notification']
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
