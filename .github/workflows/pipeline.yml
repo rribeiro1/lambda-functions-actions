@@ -245,6 +245,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: failure
+          icon_emoji: ':octocat:'
           text: Project ${{ github.event.repository.name }} deployment has failed.
           author_name: '@Rafael Ribeiro'
-          fields: repo,message,commit,author,workflow
+          fields: repo,message,commit,workflow
