@@ -232,6 +232,7 @@ jobs:
   deployment-notification:
     name: Deployment Notification
     needs: [build, packing, development-deployment]
+    runs-on: ubuntu-latest
     steps:
       - name: Message
         run: echo ${{ needs.build.result }}
