@@ -233,7 +233,7 @@ jobs:
     name: Deployment Failed Notification
     needs: [build, packing, development-deployment]
     runs-on: ubuntu-latest
-    if: ${{ needs.build.result == 'failure' }}
+    if: always() && needs.build.result == 'failure'
     steps:
       - name: Message
         run: |
