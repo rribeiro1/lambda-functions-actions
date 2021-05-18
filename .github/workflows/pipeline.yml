@@ -230,13 +230,13 @@ jobs:
         run: serverless deploy --stage development --package deployment-package
 
   deployment-notification:
-    name: Deployment Notification
+    name: Deployment Failed Notification
     needs: [build, packing, development-deployment]
-    if: ${{ needs.build.result == 'failure' || needs.packing.result == 'failure' || needs.development-deployment.result == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - name: Message
         run: |
-         echo Build ${{ needs.build.result }}
-         echo Packing ${{ needs.packing.result }}
-         echo Deployment ${{ needs.development-deployment.result }}
+          echo Build ${{ needs.build.result }}
+          echo Packing ${{ needs.packing.result }}
+          echo Deployment ${{ needs.development-deployment.result }}
+        if: ${{ needs.build.result == 'failure' || needs.packing.result == 'failure' || needs.development-deployment.result == 'failure' }}
