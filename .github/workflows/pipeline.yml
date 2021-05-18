@@ -51,7 +51,7 @@ jobs:
 
       # Pulling the github-action from S3
       - name: Download Private Actions
-        run: aws s3 cp s3://${{env.S3_ACTIONS_BUCKET}}/action.yaml ./.github/actions/action.yaml
+        run: aws s3 c s3://${{env.S3_ACTIONS_BUCKET}}/action.yaml ./.github/actions/action.yaml
 
       # Using the action
       - name: Hello World
