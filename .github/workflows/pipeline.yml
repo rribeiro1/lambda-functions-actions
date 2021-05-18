@@ -245,7 +245,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: failure
-          text: ${{ github.event.repository.name }} deployed failed in the job ${{ contains(needs.*.result, 'failure') }}
-          mention: '@awesome-team'
-          author_name: 'Deployment Pipeline Failed'
+          text: Project ${{ github.event.repository.name }} deployment has failed.
+          author_name: '@Rafael Ribeiro'
           fields: repo,message,commit,author,workflow
