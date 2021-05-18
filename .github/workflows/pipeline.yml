@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -235,8 +235,13 @@ jobs:
     runs-on: ubuntu-latest
     if: always() && contains(needs.*.result, 'failure')
     steps:
-      - name: Message
-        run: |
-          echo Build ${{ needs.build.result }}
-          echo Packing ${{ needs.packing.result }}
-          echo Deployment ${{ needs.development-deployment.result }}
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: failure
+          author_name: "GithubActions"
+          mention: 'here'
+          if_mention: failure
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
