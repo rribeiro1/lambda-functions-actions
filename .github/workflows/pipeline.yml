@@ -233,18 +233,18 @@ jobs:
       - name: Serverless Deployment
         run: serverless deploy --stage development --package deployment-package
 
-  deployment-failed-notification:
-    name: Deployment Failed Notification
-    needs: [build, packing, development-deployment]
-    runs-on: ubuntu-latest
-    if: always() && contains(needs.*.result, 'failure')
-    steps:
-      - name: Notify Slack
-        uses: 8398a7/action-slack@v3  
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: failure
-          text: ':warning: **${{ github.event.repository.name }}** deployment has failed.'
-          author_name: 'Deployment details'
-          fields: repo,message,commit,workflow
+    deployment-failed-notification:
+      name: Deployment Failed Notification
+      needs: [build, packing, development-deployment]
+      runs-on: ubuntu-latest
+      if: always() && contains(needs.*.result, 'failure')
+      steps:
+        - name: Notify Slack
+          uses: 8398a7/action-slack@v3  
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          with:
+            status: failure
+            text: ':heavy_exclamation_mark: ${{ github.event.repository.name }} deployment has failed.'
+            author_name: 'Deployment details'
+            fields: repo,message,commit,workflow
