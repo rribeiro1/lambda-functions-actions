@@ -233,5 +233,5 @@ jobs:
     name: Deployment Notification
     needs: [build, packing, development-deployment]
     steps:
-      name: Message
-      run: echo ${{ needs.build.result }}
+      - name: Message
+        run: echo ${{ needs.build.result }}
