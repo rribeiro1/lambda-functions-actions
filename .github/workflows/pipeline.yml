@@ -236,4 +236,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Message
-        run: echo ${{ needs.build.result }}
+        run: |
+         echo Build ${{ needs.build.result }}
+         echo Packing ${{ needs.packing.result }}
+         echo Deployment ${{ needs.development-deployment.result }}
