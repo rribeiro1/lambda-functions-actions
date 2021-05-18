@@ -15,7 +15,6 @@ jobs:
       name: build
     name: Build & Test
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.actor != 'dependabot[bot]' }}
 
     env:
       DB_USERNAME: postgres
@@ -41,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -233,3 +232,20 @@ jobs:
 
       - name: Serverless Deployment
         run: serverless deploy --stage development --package deployment-package
+
+  deployment-failed-notification:
+    name: Deployment Failed Notification
+    needs: [build, packing, development-deployment]
+    runs-on: ubuntu-latest
+    if: always() && contains(needs.*.result, 'failure')
+    steps:
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: failure
+          author_name: "GithubActions"
+          mention: 'here'
+          if_mention: failure
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
