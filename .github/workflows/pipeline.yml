@@ -231,7 +231,7 @@ jobs:
 
   deployment-notification:
     name: Deployment Notification
-    needs: [build, packing, development-deployment]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Message
