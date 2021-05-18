@@ -240,7 +240,7 @@ jobs:
     if: always() && contains(needs.*.result, 'failure')
     steps:
       - name: Notify Slack
-        uses: 8398a7/action-slack@v3
+        uses: 8398a7/action-slack@v3  
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -248,4 +248,4 @@ jobs:
           author_name: "GithubActions"
           mention: 'here'
           if_mention: failure
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          fields: repo,message,commit,author,workflow
