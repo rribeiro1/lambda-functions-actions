@@ -51,7 +51,7 @@ jobs:
 
       # Pulling the github-action from S3
       - name: Download Private Actions
-        run: aws s3 c s3://${{env.S3_ACTIONS_BUCKET}}/action.yaml ./.github/actions/action.yaml
+        run: aws s3 cp s3://${{env.S3_ACTIONS_BUCKET}}/action.yaml ./.github/actions/action.yaml
 
       # Using the action
       - name: Hello World
@@ -105,7 +105,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v
         with:
           python-version: 3.7
 
@@ -229,7 +229,7 @@ jobs:
       - name: Serverless Deployment
         run: serverless deploy --stage development --package deployment-package
 
-  deployment-notification:
+  deployment-failed-notification:
     name: Deployment Failed Notification
     needs: [build, packing, development-deployment]
     runs-on: ubuntu-latest
