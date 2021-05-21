@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v
+        uses: actions/checkout@v2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -235,7 +235,11 @@ jobs:
 
   deployment-failed-notification:
     name: Deployment Failed Notification
-    needs: [build, packing, development-deployment]
+    needs: [  
+        build, 
+        packing, 
+        development-deployment
+      ]
     runs-on: ubuntu-latest
     if: always() && contains(needs.*.result, 'failure')
     steps:
@@ -245,7 +249,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: failure
-          author_name: "GithubActions"
-          mention: 'here'
-          if_mention: failure
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          text: ':heavy_exclamation_mark: ${{ github.event.repository.name }} deployment has failed.'
+          author_name: 'Deployment details'
+          fields: repo,message,commit,workflow
