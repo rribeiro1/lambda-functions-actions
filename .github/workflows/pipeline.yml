@@ -21,10 +21,10 @@ jobs:
     name: Build & Test 2
     needs: test1
     runs-on: ubuntu-latest
-    if: ${{ false }}
     steps:
       - name: Hello World
         run: echo "Hello"
+        if: ${{ false }}
 
   test3:
     name: Build & Test 3
