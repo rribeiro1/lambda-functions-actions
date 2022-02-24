@@ -10,6 +10,22 @@ on:
       - completed
 
 jobs:
+  test1:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello World
+        run: echo "Hello"
+
+  test2:
+    name: Build & Test
+    needs: test1
+    runs-on: ubuntu-latest
+    if: ${{ secrets.SMOKE_TEST_ACTIVE == "true" }}
+    steps:
+      - name: Hello World
+        run: echo "Hello"
+
   build:
     environment:
       name: build
