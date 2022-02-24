@@ -21,7 +21,7 @@ jobs:
     name: Build & Test
     needs: test1
     runs-on: ubuntu-latest
-    if: ${{ secrets.SMOKE_TEST_ACTIVE == "true" }}
+    if: ${{ false }}
     steps:
       - name: Hello World
         run: echo "Hello"
