@@ -18,10 +18,18 @@ jobs:
         run: echo "Hello"
 
   test2:
-    name: Build & Test
+    name: Build & Test 2
     needs: test1
     runs-on: ubuntu-latest
     if: ${{ false }}
+    steps:
+      - name: Hello World
+        run: echo "Hello"
+
+  test3:
+    name: Build & Test 3
+    needs: test2
+    runs-on: ubuntu-latest
     steps:
       - name: Hello World
         run: echo "Hello"
